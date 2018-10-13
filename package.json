@@ -1,10 +1,10 @@
 {
-  "name": "grunt-shell-es6",
-  "version": "0.0.1",
+  "name": "watch.js",
+  "version": "1.0.0",
   "private": true,
   "author": {
     "name": "TC McCarthy",
-    "email": "tc.mccarthy1@gmail.com"
+    "email": "tc@mccarthydigitalconsulting.com"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0"
