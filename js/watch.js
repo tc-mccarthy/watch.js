@@ -762,12 +762,21 @@ var Watch = function () {
 	function Watch(element, params) {
 		_classCallCheck(this, Watch);
 
-		this.in_view = false;
-		this.params = params ? params : {};
+		Object.assign(this, {
+			in_view: false,
+			params: {},
+			in_view_cbs: [],
+			out_view_cbs: []
+		});
+
+		if (!!params) {
+			Object.assign(this, {
+				params: params
+			});
+		}
+
 		this.getElement(element);
 		this.observe();
-		this.in_view_cbs = [];
-		this.out_view_cbs = [];
 	}
 
 	/**
@@ -852,7 +861,7 @@ var Watch = function () {
 		}
 
 		/**
-   * Sets the function to be called when the element comes into view
+   * Sets a function to be called once when the element comes into view
    *
    * @param function func
    * @return Watch
@@ -866,7 +875,7 @@ var Watch = function () {
 		}
 
 		/**
-   * Sets the function to be called when the element goes out of view
+   * Sets a function to be called once when the element goes out of view
    *
    * @param function func
    * @return Watch

@@ -6,12 +6,21 @@ class Watch {
 	 * @param Object params IntersectionObserver parameters
 	 */
 	constructor(element, params) {
-		this.in_view = false;
-		this.params = (params) ? params : {};
+		Object.assign(this, {
+			in_view: false,
+			params: {},
+			in_view_cbs: [],
+			out_view_cbs: []
+		});
+
+		if (!!params) {
+			Object.assign(this, {
+				params: params
+			});
+		}
+
 		this.getElement(element);
 		this.observe();
-		this.in_view_cbs = [];
-		this.out_view_cbs = [];
 	}
 
 	/**
@@ -80,7 +89,7 @@ class Watch {
 	}
 
 	/**
-	 * Sets the function to be called when the element comes into view
+	 * Sets a function to be called once when the element comes into view
 	 *
 	 * @param function func
 	 * @return Watch
@@ -91,7 +100,7 @@ class Watch {
 	}
 
 	/**
-	 * Sets the function to be called when the element goes out of view
+	 * Sets a function to be called once when the element goes out of view
 	 *
 	 * @param function func
 	 * @return Watch
