@@ -17,5 +17,9 @@ After including the JS on your page you can instantiate a new `Watch` object pas
         // what to do when the element comes in to view
       }).outView(() => {
         // what to do when the element goes out of view
+      }).oneInView(() => {
+        // what do when the element come in to view (once)
+      }).oneOutView(() => {
+          // what do when the element come out of view (once)
       });
     </script>
