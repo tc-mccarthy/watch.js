@@ -34,7 +34,7 @@ module.exports = function (grunt) {
 			dist: {
 				//dest - string: src - array
 				src: ["js/working/watch.es6.js"],
-				dest: "js/working/watch.babel.js"
+				dest: "js/watch.js"
 			}
 		},
 
@@ -89,6 +89,6 @@ module.exports = function (grunt) {
 
 	// register at least this one task
 	// register at least this one task
-	grunt.registerTask('default', ['concat', 'babel', 'browserify', 'removelogging', 'uglify']);
-	grunt.registerTask('dev', ['jshint', 'concat', 'babel', 'browserify', 'uglify', 'watch']);
+	grunt.registerTask('default', ['concat', 'babel', 'removelogging', 'uglify']);
+	grunt.registerTask('dev', ['jshint', 'concat', 'babel', 'uglify', 'watch']);
 };
