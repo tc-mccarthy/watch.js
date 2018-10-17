@@ -715,6 +715,43 @@ if (!Object.assign) {
 	});
 }
 
+var Watch_CB = function () {
+	function Watch_CB(func, params) {
+		_classCallCheck(this, Watch_CB);
+
+		if (!params) {
+			params = {};
+		}
+
+		// integrate defaults and params into instance
+		Object.assign(this, {
+			single: false,
+			run_cb: true
+		}, params);
+
+		if (!func) {
+			throw "You must provide a function to run";
+		}
+
+		this.func = func;
+	}
+
+	_createClass(Watch_CB, [{
+		key: 'run',
+		value: function run() {
+			if (this.run_cb) {
+				if (this.single) {
+					this.run_cb = false;
+				}
+
+				this.func();
+			}
+		}
+	}]);
+
+	return Watch_CB;
+}();
+
 var Watch = function () {
 	/**
   * Fired on instantiation
@@ -729,6 +766,8 @@ var Watch = function () {
 		this.params = params ? params : {};
 		this.getElement(element);
 		this.observe();
+		this.in_view_cbs = [];
+		this.out_view_cbs = [];
 	}
 
 	/**
@@ -759,7 +798,13 @@ var Watch = function () {
 	}, {
 		key: 'in_view_cb',
 		value: function in_view_cb() {
-			console.warn("Watch.js: No functions have been set for when this element comes in to view"); /*RemoveLogging:skip*/
+			if (this.in_view_cbs.length > 0) {
+				this.in_view_cbs.forEach(function (cb) {
+					cb.run();
+				});
+			} else {
+				console.warn("Watch.js: No functions have been set for when this element comes in to view"); /*RemoveLogging:skip*/
+			}
 		}
 
 		/**
@@ -769,7 +814,13 @@ var Watch = function () {
 	}, {
 		key: 'out_view_cb',
 		value: function out_view_cb() {
-			console.warn("Watch.js: No functions have been set for when this element goes out of view"); /*RemoveLogging:skip*/
+			if (this.out_view_cbs.length > 0) {
+				this.out_view_cbs.forEach(function (cb) {
+					cb.run();
+				});
+			} else {
+				console.warn("Watch.js: No functions have been set for when this element goes out of view"); /*RemoveLogging:skip*/
+			}
 		}
 
 		/**
@@ -782,7 +833,7 @@ var Watch = function () {
 	}, {
 		key: 'inView',
 		value: function inView(func) {
-			this.in_view_cb = func;
+			this.in_view_cbs.push(new Watch_CB(func));
 			return this;
 		}
 
@@ -796,7 +847,35 @@ var Watch = function () {
 	}, {
 		key: 'outView',
 		value: function outView(func) {
-			this.out_view_cb = func;
+			this.out_view_cbs.push(new Watch_CB(func));
+			return this;
+		}
+
+		/**
+   * Sets the function to be called when the element comes into view
+   *
+   * @param function func
+   * @return Watch
+   */
+
+	}, {
+		key: 'oneInView',
+		value: function oneInView(func) {
+			this.in_view_cbs.push(new Watch_CB(func, { single: true }));
+			return this;
+		}
+
+		/**
+   * Sets the function to be called when the element goes out of view
+   *
+   * @param function func
+   * @return Watch
+   */
+
+	}, {
+		key: 'oneOutView',
+		value: function oneOutView(func) {
+			this.out_view_cbs.push(new Watch_CB(func, { single: true }));
 			return this;
 		}
 
@@ -842,6 +921,7 @@ var Watch = function () {
 }();
 
 global.Watch = window.Watch = Watch;
+global.Watch_CB = window.Watch_CB = Watch_CB;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}]},{},[1]);

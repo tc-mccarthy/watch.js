@@ -10,6 +10,8 @@ class Watch {
 		this.params = (params) ? params : {};
 		this.getElement(element);
 		this.observe();
+		this.in_view_cbs = [];
+		this.out_view_cbs = [];
 	}
 
 	/**
@@ -33,14 +35,26 @@ class Watch {
 	 * Fired when the element comes into view
 	 */
 	in_view_cb() {
-		console.warn("Watch.js: No functions have been set for when this element comes in to view"); /*RemoveLogging:skip*/
+		if (this.in_view_cbs.length > 0) {
+			this.in_view_cbs.forEach((cb) => {
+				cb.run();
+			});
+		} else {
+			console.warn("Watch.js: No functions have been set for when this element comes in to view"); /*RemoveLogging:skip*/
+		}
 	}
 
 	/**
 	 * Fired when the element goes out of view
 	 */
 	out_view_cb() {
-		console.warn("Watch.js: No functions have been set for when this element goes out of view"); /*RemoveLogging:skip*/
+		if (this.out_view_cbs.length > 0) {
+			this.out_view_cbs.forEach((cb) => {
+				cb.run();
+			});
+		} else {
+			console.warn("Watch.js: No functions have been set for when this element goes out of view"); /*RemoveLogging:skip*/
+		}
 	}
 
 	/**
@@ -50,7 +64,7 @@ class Watch {
 	 * @return Watch
 	 */
 	inView(func) {
-		this.in_view_cb = func;
+		this.in_view_cbs.push(new Watch_CB(func));
 		return this;
 	}
 
@@ -61,7 +75,29 @@ class Watch {
 	 * @return Watch
 	 */
 	outView(func) {
-		this.out_view_cb = func;
+		this.out_view_cbs.push(new Watch_CB(func));
+		return this;
+	}
+
+	/**
+	 * Sets the function to be called when the element comes into view
+	 *
+	 * @param function func
+	 * @return Watch
+	 */
+	oneInView(func) {
+		this.in_view_cbs.push(new Watch_CB(func, { single: true }));
+		return this;
+	}
+
+	/**
+	 * Sets the function to be called when the element goes out of view
+	 *
+	 * @param function func
+	 * @return Watch
+	 */
+	oneOutView(func) {
+		this.out_view_cbs.push(new Watch_CB(func, { single: true }));
 		return this;
 	}
 

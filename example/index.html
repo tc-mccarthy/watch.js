@@ -531,9 +531,10 @@
             visibility: 0.25
           });
 
-          watcher.inView(() => {
+          // example of of both single and all use functions
+          watcher.inView(() => { // every time an object comes in to view
             $(".stickyEnabled").removeClass("sticky");
-          }).outView(() => {
+          }).oneOutView(() => { //only the first time it goes out of view
             $(".stickyEnabled").addClass("sticky");
           });
 
